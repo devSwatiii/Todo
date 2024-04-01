@@ -18,4 +18,7 @@ class TodoRepo (private val dao: TodoDao) {
     suspend fun updateData(todoList: TodoList){
         dao.update(todoList)
     }
+    suspend fun findTitle(todoList: String){
+        dao.findByTitle(todoList)
+    }
 }

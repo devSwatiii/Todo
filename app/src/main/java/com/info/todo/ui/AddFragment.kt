@@ -9,16 +9,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.info.todo.MainViewModel
 import com.info.todo.R
 import com.info.todo.databinding.FragmentAddBinding
+import com.info.todo.local.TodoList
+
 //import dagger.hilt.android.AndroidEntryPoint
 
 //@AndroidEntryPoint
 class AddFragment : Fragment() {
-lateinit var viewModel:MainViewModel
-//lateinit var binding: FragmentAddBinding
+    lateinit var viewModel: MainViewModel
+    lateinit var binding: FragmentAddBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(
-            MainViewModel::class.java)
+            MainViewModel::class.java
+        )
 
     }
 
@@ -26,10 +29,28 @@ lateinit var viewModel:MainViewModel
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        binding = FragmentAddBinding.inflate(inflater,container,false)
+        binding = FragmentAddBinding.inflate(inflater, container, false)
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add, container, false)
+        return binding.root
     }
+
+
+    override fun onStart() {
+        super.onStart()
+        binding.submitBtn?.setOnClickListener {
+
+            viewModel.addTodoList(
+//                if(binding.etDes.text?.isNotEmpty() == true && binding.etDes.text?.isNotEmpty()!! && binding.etDes.text?.isNotEmpty() == true){
+                    TodoList(
+                        description = binding.etDes.text.toString(),
+                        title = binding.etTitle.text.toString(),
+                        priority = binding.etPri.text.toString().toInt()
+                    ))
+                }
+
+//            )
+        }
 
 
 }

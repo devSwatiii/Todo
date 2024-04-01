@@ -22,6 +22,11 @@ class MainViewModel (private val repo: TodoRepo) : ViewModel() {
             repo.insertData(todoList)
         }
     }
+    fun findtile(todoList: String) {
+        viewModelScope.launch {
+            repo.findTitle(todoList)
+        }
+    }
     fun deleteTodoList(todoList: TodoList) {
         viewModelScope.launch {
             repo.deleteData(todoList)
