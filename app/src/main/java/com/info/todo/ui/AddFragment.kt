@@ -1,29 +1,23 @@
 package com.info.todo.ui
 
+
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import com.info.todo.MainViewModel
-import com.info.todo.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.info.todo.databinding.FragmentAddBinding
 import com.info.todo.local.TodoList
+import com.info.todo.utils.shortToast
+import com.info.todo.viewmodels.MainViewModel
 
-//import dagger.hilt.android.AndroidEntryPoint
 
-//@AndroidEntryPoint
 class AddFragment : Fragment() {
-    lateinit var viewModel: MainViewModel
-    lateinit var binding: FragmentAddBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(
-            MainViewModel::class.java
-        )
+     private val viewModel: MainViewModel by activityViewModels()
+    private lateinit var binding: FragmentAddBinding
 
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,26 +25,32 @@ class AddFragment : Fragment() {
     ): View? {
         binding = FragmentAddBinding.inflate(inflater, container, false)
 
-        // Inflate the layout for this fragment
         return binding.root
     }
 
 
     override fun onStart() {
         super.onStart()
-        binding.submitBtn?.setOnClickListener {
+        if(binding.etDes.text?.isNotEmpty() == true && binding.etDes.text?.isNotEmpty()!! && binding.etDes.text?.isNotEmpty() == true){
+            binding.submitBtn?.setOnClickListener {
 
-            viewModel.addTodoList(
-//                if(binding.etDes.text?.isNotEmpty() == true && binding.etDes.text?.isNotEmpty()!! && binding.etDes.text?.isNotEmpty() == true){
+                viewModel.addTodoList(
                     TodoList(
                         description = binding.etDes.text.toString(),
                         title = binding.etTitle.text.toString(),
                         priority = binding.etPri.text.toString().toInt()
-                    ))
-                }
+                    )
+                )
+                context?.shortToast("Your notes saved successfully")
+                findNavController().navigateUp()
+            }
+        }else{
+            context?.shortToast("enter some notes")
 
-//            )
         }
 
 
+
+
+    }
 }

@@ -1,48 +1,53 @@
 package com.info.todo
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.info.todo.databinding.ListViewBinding
 import com.info.todo.local.TodoList
 
+//import com.info.todo.local.TodoList
 
-class TodoAdapter(private val list: List<TodoList>) :
-    RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder)
-     */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val desc: TextView = view.findViewById(R.id.tv_desc)
-        val title: TextView = view.findViewById(R.id.tv_title)
-        val priority: TextView = view.findViewById(R.id.tv_pri)
 
+
+class TodoAdapter(val deleteItem: (TodoList)->Unit) :ListAdapter<TodoList, TodoAdapter.TodoViewHolder>(DIFF_CALLBACK) {
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = TodoViewHolder(
+        ListViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    )
+    override fun onBindViewHolder(holder:TodoViewHolder , position: Int) {
+        holder.bindLast(getItem(position),deleteItem)
 
     }
-
-    // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        // Create a new view, which defines the UI of the list item
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.list_view, viewGroup, false)
-
-        return ViewHolder(view)
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TodoList>() {
+            override fun areItemsTheSame(
+                oldItem: TodoList,
+                newItem: TodoList,
+            ): Boolean = oldItem.id == newItem.id
+            override fun areContentsTheSame(
+                oldItem: TodoList,
+                newItem: TodoList,
+            ): Boolean = oldItem == newItem
+        }
     }
+    inner class TodoViewHolder(private val binding: ListViewBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bindLast(item: TodoList, deleteItem: (TodoList) -> Unit) {
+            binding.apply {
+                tvDesc.text = item.description
+                tvTitle.text = item.title
+                tvPri.text = item.priority.toString()
+                delete.setOnClickListener {
+                    deleteItem(item)
+                }
 
-    // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        viewHolder.desc.text = list[position].description
-        viewHolder.title.text = list[position].title
-        viewHolder.priority.text = list[position].priority.toString()
+            }
+        }
     }
-
-    // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = list.size
-
 }

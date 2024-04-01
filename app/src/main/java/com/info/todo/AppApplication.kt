@@ -4,9 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.info.todo.local.TodoDataBase
 
-//import dagger.hilt.android.HiltAndroidApp
 
-//@HiltAndroidApp
 class AppApplication: Application() {
     companion object{
     lateinit var database: TodoDataBase

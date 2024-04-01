@@ -1,24 +1,22 @@
 package com.info.todo
 
-import com.info.todo.local.TodoDao
+import com.info.todo.AppApplication.Companion.database
 import com.info.todo.local.TodoList
 
-class TodoRepo (private val dao: TodoDao) {
-    suspend fun allList():List<TodoList>{
-        return dao.allList()
-    }
+class TodoRepo () {
+     fun allList() = database.todoDao().allList()
+     fun findPriority(query: String) = database.todoDao().searchNote(query)
 
 
     suspend fun insertData(todoList: TodoList){
-        dao.add(todoList)
+       
+        database.todoDao().add(todoList)
     }
     suspend fun deleteData(todoList: TodoList){
-        dao.delete(todoList)
+        database.todoDao().delete(todoList)
     }
     suspend fun updateData(todoList: TodoList){
-        dao.update(todoList)
+        database.todoDao().update(todoList)
     }
-    suspend fun findTitle(todoList: String){
-        dao.findByTitle(todoList)
-    }
+
 }

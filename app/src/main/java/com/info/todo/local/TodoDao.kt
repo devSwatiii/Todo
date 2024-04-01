@@ -1,15 +1,13 @@
 package com.info.todo.local
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-//import dagger.Module
-//import dagger.Provides
-//import dagger.hilt.InstallIn
-//import dagger.hilt.components.SingletonComponent
+
 
 
 @Dao
@@ -24,14 +22,10 @@ interface TodoDao {
     @Delete
     suspend fun delete(todo: TodoList)
 
-    @Query("Select * from TodoList Where title  = :title ")
-    suspend fun findByTitle(title:String):List<TodoList>
-
-
-    @Query("Select * from TodoList Where priority = :priority")
-    suspend fun findByPriority(priority:Int):List<TodoList>
+    @Query("SELECT * FROM TodoList WHERE title LIKE :query OR priority LIKE :query ORDER BY id DESC")
+    fun searchNote(query: String): LiveData<List<TodoList>>
 
     @Query("Select * from TodoList")
-    suspend fun allList():List<TodoList>
+     fun allList():LiveData<List<TodoList>>
 
 }
